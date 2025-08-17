@@ -1,0 +1,74 @@
+services:
+  # 认证服务 - 开发环境
+  auth-service:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: ${DOCKER_IMAGE:-auth-service}:dev
+    container_name: auth-service-dev
+    ports:
+      - '${APP_PORT:-8086}:${APP_PORT:-8086}'
+    env_file:
+      - .env.dev
+    environment:
+      # 开发环境特定配置
+      - APP_ENV=development
+      # 使用 host.docker.internal 连接本机 Consul 服务
+      - CONSUL_HTTP_ADDR=http://host.docker.internal:8500
+    depends_on:
+      consul:
+        condition: service_healthy
+    networks:
+      - auth-network
+    restart: unless-stopped
+    healthcheck:
+      test: ['CMD', 'wget', '--no-verbose', '--tries=1', '--spider', 'http://localhost:${APP_PORT:-8086}/health']
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    volumes:
+      # 挂载持久化数据目录（存储日志等）
+      - ./data:/app/data
+      # 挂载日志目录
+      - ./logs:/app/logs
+      # 挂载环境变量文件
+      - ./.env.dev:/app/.env.dev:ro
+    logging:
+      driver: json-file
+      options:
+        max-size: '10m'
+        max-file: '3'
+
+  # Consul 服务注册中心
+  consul:
+    image: consul:1.15
+    container_name: auth-consul-dev
+    ports:
+      - '8500:8500'
+    networks:
+      - auth-network
+    command: consul agent -dev -client=0.0.0.0 -ui
+    environment:
+      - CONSUL_BIND_INTERFACE=eth0
+    healthcheck:
+      test: ['CMD', 'consul', 'members']
+      interval: 10s
+      timeout: 3s
+      retries: 3
+    volumes:
+      - consul-data:/consul/data
+    logging:
+      driver: json-file
+      options:
+        max-size: '5m'
+        max-file: '2'
+
+networks:
+  auth-network:
+    driver: bridge
+    name: auth-dev-network
+
+volumes:
+  consul-data:
+    name: auth-consul-dev-data

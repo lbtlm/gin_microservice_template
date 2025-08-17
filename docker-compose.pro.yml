@@ -1,0 +1,50 @@
+services:
+  # 认证服务 - 生产环境
+  auth-service:
+    image: ${DOCKER_IMAGE:-lbtsam/auth-service}:${DOCKER_TAG:-latest}
+    container_name: auth-service-prod
+    ports:
+      - '${APP_PORT:-8086}:${APP_PORT:-8086}'
+    env_file:
+      - .env.production
+    environment:
+      # 生产环境特定配置
+      - APP_ENV=production
+      # 生产环境连接外部中央控制器 Consul 服务
+      - CONSUL_HTTP_ADDR=http://104.234.155.170:8500
+      - SERVICE_ADDRESS=8.216.34.86
+    networks:
+      - auth-network
+    restart: always
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 512M
+        reservations:
+          cpus: '0.5'
+          memory: 256M
+    healthcheck:
+      test: ['CMD', 'wget', '--no-verbose', '--tries=1', '--spider', 'http://localhost:${APP_PORT:-8086}/health']
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 60s
+    volumes:
+      # 挂载持久化数据目录（存储日志等）
+      - ./data:/app/data
+      # 挂载日志目录
+      - ./logs:/app/logs
+      # 挂载环境变量文件
+      - ./.env.production:/app/.env.production:ro
+    logging:
+      driver: json-file
+      options:
+        max-size: '10m'
+        max-file: '5'
+
+networks:
+  auth-network:
+    driver: bridge
+    name: auth-prod-network
+    external: false

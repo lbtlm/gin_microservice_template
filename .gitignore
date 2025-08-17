@@ -1,0 +1,160 @@
+# IDE 和编辑器
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# 操作系统文件
+.DS_Store
+Thumbs.db
+
+# 🔒 敏感环境配置文件（绝对不能提交！）
+!.env.example.safe
+.env.dev
+.env.local
+.env.production
+.env.development
+.env.test
+.env.staging
+
+# 🔐 敏感配置和密钥
+config/production.yaml
+config/staging.yaml
+secrets/
+*.key
+*.pem
+*.crt
+*.p12
+*.pfx
+*.jks
+id_rsa*
+id_ed25519*
+
+# 🌐 云服务配置文件
+.aws/
+.aliyun/
+credentials
+config.json
+service-account.json
+
+# 📊 日志文件
+*.log
+logs/
+log/
+*.log.*
+crash.log
+nohup.out
+
+# 📦 依赖和构建
+node_modules/
+vendor/
+build/
+dist/
+target/
+bin/
+out/
+
+# 🏗️ Go 构建产物
+main
+gin-middleware-oss
+gin_middleware_oss
+*.exe
+*.test
+*.prof
+coverage.out
+coverage.html
+__debug_bin
+
+# 🗄️ 数据库文件
+*.db
+*.sqlite
+*.sqlite3
+data/
+dumps/
+backups/
+
+# 📄 文档构建产物
+docs/_build/
+site/
+
+# 🧪 测试和调试文件
+.coverage
+.nyc_output
+.pytest_cache/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+
+# 📱 移动开发
+*.ipa
+*.apk
+*.aab
+
+# ☁️ Docker 相关敏感文件
+docker-compose.override.yml
+docker-compose.production.yml
+.dockerignore.local
+
+# 🤖 AI 助手相关
+.claude_context.md
+project_process/daily/*.md
+memory.sqlite
+.claude_rules/sensitive/
+
+# 💾 缓存和临时文件
+*.tmp
+*.cache
+*.temp
+.temp/
+.cache/
+.sass-cache/
+.parcel-cache/
+
+# 📈 监控和性能分析
+*.heap
+*.cpu
+*.mem
+.pprof/
+
+# 🔄 版本控制
+.git/
+.svn/
+.hg/
+
+# 📋 项目管理工具
+.project
+.classpath
+.settings/
+
+# 🎯 特定框架
+# Laravel
+storage/
+bootstrap/cache/
+# Django
+staticfiles/
+media/
+# Rails
+tmp/
+log/
+
+# 📊 分析工具输出
+.sonar/
+.scannerwork/
+report.xml
+*.report
+
+# 🚀 部署相关敏感文件
+deploy.sh.local
+deployment_keys/
+infrastructure/secrets/
+terraform.tfstate*
+ansible-vault-pass.txt
+
+# 💼 业务敏感文件
+uploads/
+user_data/
+private/
+confidential/
